@@ -746,9 +746,9 @@ section {
   justify-content: center;
   align-items: center;
   margin: 1.2rem auto 0;
-  min-width: 300px;
+  min-width: 220px;
   width: fit-content;
-  max-width: 360px;
+  max-width: 260px;
 }
 
 .form-input:focus,

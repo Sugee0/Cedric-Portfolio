@@ -1,0 +1,105 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/x-ms-odc; charset=utf-8">
+<meta name=ProgId content=ODC.Database>
+<meta name=SourceType content=OLEDB>
+<title>Query - Programs</title>
+<xml id=docprops><o:DocumentProperties
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns="http://www.w3.org/TR/REC-html40">
+  <o:Description>Connection to the 'Programs' query in the workbook.</o:Description>
+  <o:Name>Query - Programs</o:Name>
+ </o:DocumentProperties>
+</xml><xml id=msodc><odc:OfficeDataConnection
+  xmlns:odc="urn:schemas-microsoft-com:office:odc"
+  xmlns="http://www.w3.org/TR/REC-html40">
+  <odc:PowerQueryConnection odc:Type="OLEDB">
+   <odc:ConnectionString>Provider=Microsoft.Mashup.OleDb.1;Data Source=$Workbook$;Location=Programs;Extended Properties=</odc:ConnectionString>
+   <odc:CommandType>TableCollection</odc:CommandType>
+   <odc:CommandText>&quot;Programs&quot;</odc:CommandText>
+  </odc:PowerQueryConnection>
+  <odc:PowerQueryMashupData>&lt;Mashup xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns=&quot;http://schemas.microsoft.com/DataMashup&quot;&gt;&lt;Client&gt;EXCEL&lt;/Client&gt;&lt;Version&gt;2.146.178.0&lt;/Version&gt;&lt;MinVersion&gt;2.21.0.0&lt;/MinVersion&gt;&lt;Culture&gt;en-US&lt;/Culture&gt;&lt;SafeCombine&gt;true&lt;/SafeCombine&gt;&lt;Items&gt;&lt;Query Name=&quot;Programs&quot;&gt;&lt;Formula&gt;&lt;![CDATA[let&#13;&#10;    Source = Excel.Workbook(File.Contents(&quot;C:\Users\admin\Downloads\Student_Records.xlsx&quot;), null, true),&#13;&#10;    Student_Flat_Data_Sheet = Source{[Item=&quot;Student_Flat_Data&quot;,Kind=&quot;Sheet&quot;]}[Data],&#13;&#10;    #&quot;Promoted Headers&quot; = Table.PromoteHeaders(Student_Flat_Data_Sheet, [PromoteAllScalars=true]),&#13;&#10;    #&quot;Changed Type&quot; = Table.TransformColumnTypes(#&quot;Promoted Headers&quot;,{{&quot;StudentID&quot;, type text}, {&quot;StudentName&quot;, type text}, {&quot;Email&quot;, type text}, {&quot;Program&quot;, type text}, {&quot;YearLevel&quot;, Int64.Type}, {&quot;CourseCode&quot;, type text}, {&quot;CourseTitle&quot;, type text}, {&quot;Instructor&quot;, type text}, {&quot;InstructorEmail&quot;, type text}, {&quot;Room&quot;, type text}, {&quot;Schedule&quot;, type text}, {&quot;Grade&quot;, type text}}),&#13;&#10;    #&quot;Split Column by Delimiter&quot; = Table.SplitColumn(#&quot;Changed Type&quot;, &quot;StudentName&quot;, Splitter.SplitTextByDelimiter(&quot; &quot;, QuoteStyle.Csv), {&quot;StudentName.1&quot;, &quot;StudentName.2&quot;}),&#13;&#10;    #&quot;Changed Type1&quot; = Table.TransformColumnTypes(#&quot;Split Column by Delimiter&quot;,{{&quot;StudentName.1&quot;, type text}, {&quot;StudentName.2&quot;, type text}}),&#13;&#10;    #&quot;Renamed Columns&quot; = Table.RenameColumns(#&quot;Changed Type1&quot;,{{&quot;StudentName.1&quot;, &quot;First Name&quot;}, {&quot;StudentName.2&quot;, &quot;Last Name&quot;}}),&#13;&#10;    #&quot;Added Conditional Column&quot; = Table.AddColumn(#&quot;Renamed Columns&quot;, &quot;Year Level&quot;, each if [YearLevel] = 1 then &quot;Freshman&quot; else if [YearLevel] = 2 then &quot;Sophomore&quot; else if [YearLevel] = 3 then &quot;Junior&quot; else if [YearLevel] = 4 then &quot;Senior&quot; else &quot;Other&quot;),&#13;&#10;    #&quot;Replaced Value&quot; = Table.ReplaceValue(#&quot;Added Conditional Column&quot;,&quot;@school.edu&quot;,&quot;@cca.edu.ph&quot;,Replacer.ReplaceText,{&quot;Email&quot;}),&#13;&#10;    #&quot;Replaced Value1&quot; = Table.ReplaceValue(#&quot;Replaced Value&quot;,&quot;@school.edu&quot;,&quot;@cca.edu.ph&quot;,Replacer.ReplaceText,{&quot;InstructorEmail&quot;}),&#13;&#10;    #&quot;Split Column by Delimiter1&quot; = Table.SplitColumn(#&quot;Replaced Value1&quot;, &quot;Schedule&quot;, Splitter.SplitTextByEachDelimiter({&quot; &quot;}, QuoteStyle.Csv, false), {&quot;Schedule.1&quot;, &quot;Schedule.2&quot;}),&#13;&#10;    #&quot;Changed Type2&quot; = Table.TransformColumnTypes(#&quot;Split Column by Delimiter1&quot;,{{&quot;Schedule.1&quot;, type text}, {&quot;Schedule.2&quot;, type text}}),&#13;&#10;    #&quot;Renamed Columns1&quot; = Table.RenameColumns(#&quot;Changed Type2&quot;,{{&quot;Schedule.1&quot;, &quot;Days&quot;}}),&#13;&#10;    #&quot;Split Column by Delimiter2&quot; = Table.SplitColumn(#&quot;Renamed Columns1&quot;, &quot;Schedule.2&quot;, Splitter.SplitTextByDelimiter(&quot;-&quot;, QuoteStyle.Csv), {&quot;Schedule.2.1&quot;, &quot;Schedule.2.2&quot;}),&#13;&#10;    #&quot;Changed Type3&quot; = Table.TransformColumnTypes(#&quot;Split Column by Delimiter2&quot;,{{&quot;Schedule.2.1&quot;, Int64.Type}, {&quot;Schedule.2.2&quot;, type time}}),&#13;&#10;    #&quot;Renamed Columns2&quot; = Table.RenameColumns(#&quot;Changed Type3&quot;,{{&quot;Schedule.2.1&quot;, &quot;Time Start&quot;}, {&quot;Schedule.2.2&quot;, &quot;Time End&quot;}}),&#13;&#10;    #&quot;Added Conditional Column1&quot; = Table.AddColumn(#&quot;Renamed Columns2&quot;, &quot;Program Description&quot;, each if [Program] = &quot;BSIT&quot; then &quot;BS in Information Technology&quot; else if [Program] = &quot;BSCS&quot; then &quot;BS in Computer Science&quot; else &quot;Other&quot;),&#13;&#10;    #&quot;Renamed Columns3&quot; = Table.RenameColumns(#&quot;Added Conditional Column1&quot;,{{&quot;CourseCode&quot;, &quot;Course Code&quot;}, {&quot;CourseTitle&quot;, &quot;Course Title&quot;}, {&quot;InstructorEmail&quot;, &quot;Instructor Email&quot;}, {&quot;Year Level&quot;, &quot;Year Lebel&quot;}, {&quot;YearLevel&quot;, &quot;Year Level&quot;}}),&#13;&#10;    #&quot;Removed Duplicates&quot; = Table.Distinct(#&quot;Renamed Columns3&quot;),&#13;&#10;    #&quot;Removed Columns&quot; = Table.RemoveColumns(#&quot;Removed Duplicates&quot;,{&quot;StudentID&quot;, &quot;First Name&quot;, &quot;Last Name&quot;, &quot;Email&quot;, &quot;Year Level&quot;, &quot;Course Code&quot;, &quot;Course Title&quot;, &quot;Instructor&quot;, &quot;Instructor Email&quot;, &quot;Room&quot;, &quot;Days&quot;, &quot;Time Start&quot;, &quot;Time End&quot;, &quot;Grade&quot;, &quot;Year Lebel&quot;}),&#13;&#10;    #&quot;Removed Duplicates1&quot; = Table.Distinct(#&quot;Removed Columns&quot;),&#13;&#10;    #&quot;Added Index&quot; = Table.AddIndexColumn(#&quot;Removed Duplicates1&quot;, &quot;Index&quot;, 1, 1, Int64.Type),&#13;&#10;    #&quot;Renamed Columns4&quot; = Table.RenameColumns(#&quot;Added Index&quot;,{{&quot;Index&quot;, &quot;Program ID&quot;}}),&#13;&#10;    #&quot;Reordered Columns&quot; = Table.ReorderColumns(#&quot;Renamed Columns4&quot;,{&quot;Program ID&quot;, &quot;Program&quot;, &quot;Program Description&quot;}),&#13;&#10;    #&quot;Inserted Prefix&quot; = Table.AddColumn(#&quot;Reordered Columns&quot;, &quot;Prefix&quot;, each &quot;P-&quot; &amp; Text.From([Program ID], &quot;en-US&quot;), type text),&#13;&#10;    #&quot;Removed Columns1&quot; = Table.RemoveColumns(#&quot;Inserted Prefix&quot;,{&quot;Prefix&quot;, &quot;Program ID&quot;}),&#13;&#10;    #&quot;Added Index1&quot; = Table.AddIndexColumn(#&quot;Removed Columns1&quot;, &quot;Index&quot;, 101, 1, Int64.Type),&#13;&#10;    #&quot;Inserted Prefix1&quot; = Table.AddColumn(#&quot;Added Index1&quot;, &quot;Prefix&quot;, each &quot;P-&quot; &amp; Text.From([Index], &quot;en-US&quot;), type text),&#13;&#10;    #&quot;Removed Columns2&quot; = Table.RemoveColumns(#&quot;Inserted Prefix1&quot;,{&quot;Index&quot;}),&#13;&#10;    #&quot;Reordered Columns1&quot; = Table.ReorderColumns(#&quot;Removed Columns2&quot;,{&quot;Prefix&quot;, &quot;Program&quot;, &quot;Program Description&quot;}),&#13;&#10;    #&quot;Renamed Columns5&quot; = Table.RenameColumns(#&quot;Reordered Columns1&quot;,{{&quot;Prefix&quot;, &quot;Program ID&quot;}}),&#13;&#10;    #&quot;Trimmed Text&quot; = Table.TransformColumns(#&quot;Renamed Columns5&quot;,{{&quot;Program ID&quot;, Text.Trim, type text}}),&#13;&#10;    #&quot;Changed Type4&quot; = Table.TransformColumnTypes(#&quot;Trimmed Text&quot;,{{&quot;Program ID&quot;, type text}})&#13;&#10;in&#13;&#10;    #&quot;Changed Type4&quot;]]&gt;&lt;/Formula&gt;&lt;IsParameterQuery xsi:nil=&quot;true&quot; /&gt;&lt;IsDirectQuery xsi:nil=&quot;true&quot; /&gt;&lt;/Query&gt;&lt;/Items&gt;&lt;/Mashup&gt;</odc:PowerQueryMashupData>
+ </odc:OfficeDataConnection>
+</xml>
+<style>
+<!--
+    .ODCDataSource
+    {
+    behavior: url(dataconn.htc);
+    }
+-->
+</style>
+ 
+</head>
+
+<body onload='init()' scroll=no leftmargin=0 topmargin=0 rightmargin=0 style='border: 0px'>
+<table style='border: solid 1px threedface; height: 100%; width: 100%' cellpadding=0 cellspacing=0 width='100%'> 
+  <tr> 
+    <td id=tdName style='font-family:arial; font-size:medium; padding: 3px; background-color: threedface'> 
+      &nbsp; 
+    </td> 
+     <td id=tdTableDropdown style='padding: 3px; background-color: threedface; vertical-align: top; padding-bottom: 3px'>
+
+      &nbsp; 
+    </td> 
+  </tr> 
+  <tr> 
+    <td id=tdDesc colspan='2' style='border-bottom: 1px threedshadow solid; font-family: Arial; font-size: 1pt; padding: 2px; background-color: threedface'>
+
+      &nbsp; 
+    </td> 
+  </tr> 
+  <tr> 
+    <td colspan='2' style='height: 100%; padding-bottom: 4px; border-top: 1px threedhighlight solid;'> 
+      <div id='pt' style='height: 100%' class='ODCDataSource'></div> 
+    </td> 
+  </tr> 
+</table> 
+
+  
+<script language='javascript'> 
+
+function init() { 
+  var sName, sDescription; 
+  var i, j; 
+  
+  try { 
+    sName = unescape(location.href) 
+  
+    i = sName.lastIndexOf(".") 
+    if (i>=0) { sName = sName.substring(1, i); } 
+  
+    i = sName.lastIndexOf("/") 
+    if (i>=0) { sName = sName.substring(i+1, sName.length); } 
+
+    document.title = sName; 
+    document.getElementById("tdName").innerText = sName; 
+
+    sDescription = document.getElementById("docprops").innerHTML; 
+  
+    i = sDescription.indexOf("escription>") 
+    if (i>=0) { j = sDescription.indexOf("escription>", i + 11); } 
+
+    if (i>=0 && j >= 0) { 
+      j = sDescription.lastIndexOf("</", j); 
+
+      if (j>=0) { 
+          sDescription = sDescription.substring(i+11, j); 
+        if (sDescription != "") { 
+            document.getElementById("tdDesc").style.fontSize="x-small"; 
+          document.getElementById("tdDesc").innerHTML = sDescription; 
+          } 
+        } 
+      } 
+    } 
+  catch(e) { 
+
+    } 
+  } 
+</script> 
+
+</body> 
+ 
+</html>

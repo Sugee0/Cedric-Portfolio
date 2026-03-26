@@ -11,8 +11,8 @@ console.log('EmailJS public key set:', !!emailjs);
 document.getElementById('year').textContent = new Date().getFullYear();
 
 // Mobile menu toggle
-const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-const navbarMenu = document.getElementById('navbarMenu');
+const mobileMenuBtn = document.querySelector('.nav-toggle');
+const navbarMenu = document.querySelector('.nav-menu');
 const navLinks = document.querySelectorAll('.nav-link');
 
 if (mobileMenuBtn) {
@@ -23,18 +23,15 @@ if (mobileMenuBtn) {
 }
 
 // Close mobile menu when a link is clicked
-if (navLinks.length > 0) {
-  navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      if (mobileMenuBtn) mobileMenuBtn.classList.remove('active');
-      if (navbarMenu) navbarMenu.classList.remove('active');
-      
-      // Update active link
-      navLinks.forEach(l => l.classList.remove('active'));
-      link.classList.add('active');
-    });
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    mobileMenuBtn.classList.remove('active');
+    navbarMenu.classList.remove('active');
+
+    navLinks.forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
   });
-}
+});
 
 // Scrollspy - update active nav link based on scroll position
 window.addEventListener('scroll', () => {

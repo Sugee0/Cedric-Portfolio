@@ -692,6 +692,10 @@ section {
 .contact-container {
   max-width: 680px;
   margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 1rem;
 }
 
 .contact-form {
@@ -700,6 +704,9 @@ section {
   border-radius: 1.5rem;
   padding: 2.5rem;
   box-shadow: var(--shadow-md);
+  width: 100%;
+  max-width: 680px;
+  text-align: left;
 }
 
 .form-group {
@@ -732,6 +739,16 @@ section {
 .form-textarea::placeholder {
   color: var(--text-muted);
   font-weight: 400;
+}
+
+.contact-form .btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1.2rem auto 0;
+  min-width: 300px;
+  width: fit-content;
+  max-width: 360px;
 }
 
 .form-input:focus,
